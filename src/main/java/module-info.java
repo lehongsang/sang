@@ -4,4 +4,5 @@ module org.example.zipfilecrack {
     requires zip4j;
     opens zipfilecrack to javafx.fxml;
     exports zipfilecrack;
+    requires com.sun.jna;
 }

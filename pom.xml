@@ -49,8 +49,14 @@
         </dependency>
         <dependency>
             <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.10.0</version>  <!-- Hoặc phiên bản mới nhất -->
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <version>5.13.0</version>
+            <version>5.10.0</version>  <!-- Hoặc phiên bản mới nhất -->
         </dependency>
     </dependencies>
 

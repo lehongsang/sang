@@ -1,10 +1,11 @@
 package zipfilecrack;
+
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 public class Main {
     public static String processZipFile(String zipFilePath, int maxLength, int numThreads, TextArea outputArea) {
-        PasswordCracker cracker = new PasswordCracker(numThreads);
+        PasswordCracker cracker = new PasswordCracker(numThreads, maxLength);
         ExecutionTimer timer = new ExecutionTimer();
         timer.start();
 
