@@ -2,7 +2,10 @@ package zipfilecrack;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -36,6 +39,10 @@ public class ZipCrackerGUI extends Application {
         TextField maxLengthField = new TextField();
         maxLengthField.setPromptText("Nhập độ dài tối đa của mật khẩu");
 
+        // Nhập số lượng luồng thực hiện
+        TextField numThreadsField = new TextField();
+        numThreadsField.setPromptText("Nhập số luồng thực hiện");
+
         // Nút bắt đầu kiểm tra
         Button startButton = new Button("Bắt đầu kiểm tra");
         startButton.setDisable(true);
@@ -58,21 +65,23 @@ public class ZipCrackerGUI extends Application {
         startButton.setOnAction(event -> {
             String zipFilePath = filePathLabel.getText();
             String maxLengthText = maxLengthField.getText();
-            if (zipFilePath.isEmpty() || maxLengthText.isEmpty()) {
-                appendOutput("Vui lòng chọn tệp ZIP và nhập độ dài mật khẩu.");
+            String numThreadsText = numThreadsField.getText();
+            if (zipFilePath.isEmpty() || maxLengthText.isEmpty() || numThreadsText.isEmpty()) {
+                appendOutput("Vui lòng chọn tệp ZIP, nhập độ dài mật khẩu, và số luồng.");
                 return;
             }
 
             try {
                 int maxLength = Integer.parseInt(maxLengthText);
+                int numThreads = Integer.parseInt(numThreadsText);  // Lấy số lượng luồng từ người dùng
 
                 new Thread(() -> {
                     appendOutput("Đang bắt đầu xử lý...");
-                    Main.processZipFile(zipFilePath, maxLength, outputArea); // Gọi xử lý từ lớp Main
+                    Main.processZipFile(zipFilePath, maxLength, numThreads, outputArea); // Truyền số luồng vào phương thức xử lý
                 }).start();
 
             } catch (NumberFormatException e) {
-                appendOutput("Độ dài mật khẩu phải là một số nguyên.");
+                appendOutput("Độ dài mật khẩu và số luồng phải là các số nguyên.");
             }
         });
 
@@ -83,12 +92,14 @@ public class ZipCrackerGUI extends Application {
                 filePathLabel,
                 new Label("Độ dài tối đa của mật khẩu:"),
                 maxLengthField,
+                new Label("Số luồng thực hiện:"),
+                numThreadsField,
                 startButton,
                 new Label("Kết quả:"),
                 outputArea
         );
 
-        Scene scene = new Scene(root, 400, 400);
+        Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

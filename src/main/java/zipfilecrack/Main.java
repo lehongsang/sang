@@ -1,19 +1,26 @@
 package zipfilecrack;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
-public class Main {
-    public static void processZipFile(String zipFilePath, int maxLength, TextArea outputArea) {
-        ExecutionTimer timer = new ExecutionTimer();
-        timer.start(); // Bắt đầu đo thời gian
 
-        PasswordCracker cracker = new PasswordCracker(4);
-        PasswordGenerator.generatePasswords("", zipFilePath, cracker);
+public class Main {
+    public static String processZipFile(String zipFilePath, int maxLength, int numThreads, TextArea outputArea) {
+        PasswordCracker cracker = new PasswordCracker(numThreads);
+        ExecutionTimer timer = new ExecutionTimer();
+        timer.start();
+
+        PasswordGenerator.generatePasswords("", zipFilePath, cracker, maxLength);
 
         cracker.shutdown();
         cracker.awaitTermination();
-        timer.stop(); // Dừng đo thời gian
 
-        // Ghi kết quả ra giao diện
-        String result = "Hoàn thành! Thời gian chạy: " + timer.getElapsedTimeSeconds() + " giây.";
-        outputArea.appendText(result + "\n");
+        timer.stop();
+
+        Platform.runLater(() -> outputArea.appendText("Thời gian chạy: " + timer.getElapsedTimeSeconds() + " giây.\n"));
+
+        if (cracker.isFound()) {
+            return "extracted"; // Đường dẫn mặc định cho thư mục giải nén
+        } else {
+            return null;
+        }
     }
 }
